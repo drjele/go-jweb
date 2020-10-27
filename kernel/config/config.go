@@ -21,15 +21,15 @@ func New() *Config {
 
     c.loadDotEnv()
 
-    c.env = c.GetParam(`ENV`, EnvProd)
+    c.env = c.GetParam(`ENV`)
 
     c.http = jwebconfighttp.New(
-        c.GetParam(`HTTP_HOST`, `80`),
+        c.GetParam(`HTTP_HOST`),
     )
 
     c.cli = jwebconfigcli.New(
-        c.GetParam(`CLI_NAME`, `jweb`),
-        c.GetParam(`CLI_DESCRIPTION`, `Jweb framework`),
+        c.GetParam(`CLI_NAME`),
+        c.GetParam(`CLI_DESCRIPTION`),
     )
 
     return &c
@@ -42,11 +42,13 @@ type Config struct {
     cli    *jwebconfigcli.Config
 }
 
-func (c *Config) GetParam(param string, defaultValue string) string {
+func (c *Config) GetParam(param string) string {
     value, ok := c.params[param]
 
     if ok == false {
-        return defaultValue
+        jweberror.Fatal(
+            jweberror.New(`could not find param "%v"`, param),
+        )
     }
 
     return value

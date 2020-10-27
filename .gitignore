@@ -1,7 +1,3 @@
-###> lib ###
-.env.local
-###> lib ###
-
 ###> generic ###
 /.idea/
 ###> generic ###
