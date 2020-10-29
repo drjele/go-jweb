@@ -6,17 +6,21 @@ import (
 
     jwebcli `gitlab.com/drjele-go/jweb/cli`
     jwebcommand `gitlab.com/drjele-go/jweb/cli/command`
-    jwebflag `gitlab.com/drjele-go/jweb/cli/flag`
     jweberror `gitlab.com/drjele-go/jweb/error`
     jwebhttp `gitlab.com/drjele-go/jweb/http`
     jwebroute `gitlab.com/drjele-go/jweb/http/routing/route`
     jwebkernel `gitlab.com/drjele-go/jweb/kernel`
+    jwebenvironment `gitlab.com/drjele-go/jweb/kernel/environment`
+    jwebmodule `gitlab.com/drjele-go/jweb/module`
 )
 
 func New(
     routeList jwebroute.List,
     commandList jwebcommand.List,
+    moduleList jwebmodule.List,
 ) *Jweb {
+    /** @todo maybe split initialization to a boot function */
+
     kernel := jwebkernel.New()
 
     jweb := Jweb{
@@ -25,10 +29,13 @@ func New(
         commandList: commandList,
     }
 
+    jweb.bootModules(moduleList)
+
     return &jweb
 }
 
 type Jweb struct {
+    moduleList  jwebmodule.Map
     kernel      *jwebkernel.Kernel
     routeList   jwebroute.List
     commandList jwebcommand.List
@@ -38,10 +45,14 @@ func (j *Jweb) Run() {
     defer j.handleError()
 
     switch j.kernel.GetFlags().GetMode() {
-    case jwebflag.ModeWeb:
-        jwebhttp.Run(j.kernel.GetConfig(), j.routeList)
+    case jwebenvironment.ModeHttp:
+        jwebhttp.Run(
+            j.kernel.GetEnvironment(),
+            j.kernel.GetConfig(),
+            j.routeList,
+        )
         break
-    case jwebflag.ModeCli:
+    case jwebenvironment.ModeCli:
         jwebcli.Run(j.kernel.GetConfig().GetCli(), j.commandList)
         break
     default:
@@ -51,7 +62,37 @@ func (j *Jweb) Run() {
     }
 }
 
-func (Jweb) handleError() {
+func (j *Jweb) GetModule(name string) jwebmodule.Module {
+    module, ok := j.moduleList[name]
+    if ok == true {
+        jweberror.Fatal(jweberror.New(`no module registered for name "%v"`, name))
+    }
+
+    return module
+}
+
+func (j *Jweb) bootModules(moduleList jwebmodule.List) {
+    for _, module := range moduleList {
+        name := module.GetName()
+
+        _, ok := j.moduleList[name]
+        if ok == true {
+            jweberror.Fatal(jweberror.New(`multiple modules registered for name "%v"`, name))
+        }
+
+        j.moduleList[name] = module
+
+        // var config Config
+        //
+        // if module.ConfigurationRequired() == true {
+        //     config = ConfigLoader.Load(name + `.yaml`)
+        // }
+        //
+        // module.Boot(j.kernel, config)
+    }
+}
+
+func (j *Jweb) handleError() {
     r := recover()
 
     if r == nil {

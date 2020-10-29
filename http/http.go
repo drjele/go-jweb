@@ -10,14 +10,25 @@ import (
     jwebroute `gitlab.com/drjele-go/jweb/http/routing/route`
     jwebrouter `gitlab.com/drjele-go/jweb/http/routing/router`
     jwebconfig `gitlab.com/drjele-go/jweb/kernel/config`
+    jwebenvironment `gitlab.com/drjele-go/jweb/kernel/environment`
 )
 
 var (
     group errgroup.Group
 )
 
-func Run(config *jwebconfig.Config, routeList jwebroute.List) {
-    router := jwebrouter.New(config.GetEnv(), routeList)
+func Run(
+    environment *jwebenvironment.Environment,
+    config *jwebconfig.Config,
+    routeList jwebroute.List,
+) {
+    if len(routeList) == 0 {
+        jweberror.Fatal(
+            jweberror.New(`no routes were set for http mode`),
+        )
+    }
+
+    router := jwebrouter.New(environment.GetEnv(), routeList)
 
     server := &http.Server{
         Addr:         config.GetHttp().GetHost(),

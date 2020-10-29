@@ -7,14 +7,20 @@ import (
 
     jwebcommand `gitlab.com/drjele-go/jweb/cli/command`
     jwebconfig `gitlab.com/drjele-go/jweb/cli/config`
-    jwebflag `gitlab.com/drjele-go/jweb/cli/flag`
     jweberror `gitlab.com/drjele-go/jweb/error`
+    jwebflag `gitlab.com/drjele-go/jweb/kernel/flag`
     jwebslice `gitlab.com/drjele-go/jweb/utility/slice`
 )
 
 type list []*cli.Command
 
 func Run(config *jwebconfig.Config, commandList jwebcommand.List) {
+    if len(commandList) == 0 {
+        jweberror.Fatal(
+            jweberror.New(`no commands were set for cli mode`),
+        )
+    }
+
     app := &cli.App{
         Name:  config.GetName(),
         Usage: config.GetDescription(),

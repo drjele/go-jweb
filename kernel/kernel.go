@@ -1,23 +1,31 @@
 package jwebkernel
 
 import (
-    jwebflag `gitlab.com/drjele-go/jweb/cli/flag`
     jwebconfig `gitlab.com/drjele-go/jweb/kernel/config`
+    jwebenvironment `gitlab.com/drjele-go/jweb/kernel/environment`
+    jwebflag `gitlab.com/drjele-go/jweb/kernel/flag`
 )
 
 func New() *Kernel {
     kernel := Kernel{}
 
-    kernel.config = jwebconfig.New()
+    kernel.environment = jwebenvironment.New()
 
-    kernel.flags = jwebflag.New()
+    kernel.config = jwebconfig.New(kernel.environment)
+
+    kernel.flags = jwebflag.New(kernel.environment)
 
     return &kernel
 }
 
 type Kernel struct {
-    config *jwebconfig.Config
-    flags  *jwebflag.Flag
+    environment *jwebenvironment.Environment
+    config      *jwebconfig.Config
+    flags       *jwebflag.Flag
+}
+
+func (k *Kernel) GetEnvironment() *jwebenvironment.Environment {
+    return k.environment
 }
 
 func (k *Kernel) GetConfig() *jwebconfig.Config {
@@ -26,8 +34,4 @@ func (k *Kernel) GetConfig() *jwebconfig.Config {
 
 func (k *Kernel) GetFlags() *jwebflag.Flag {
     return k.flags
-}
-
-func (k *Kernel) GetEnv() string {
-    return k.config.GetEnv()
 }
