@@ -61,8 +61,9 @@ func (e *Environment) loadDotEnv(rootDir string) map[string]string {
 
     files := []string{rootDir + `.env`}
 
-    if jwebfile.Exists(rootDir + `.env.local`) {
-        files = append(files, rootDir+`.env.local`)
+    envLocal := rootDir + `.env.local`
+    if jwebfile.Exists(envLocal) {
+        files = append(files, envLocal)
     }
 
     params, err := godotenv.Read(files...)

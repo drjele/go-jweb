@@ -13,5 +13,7 @@ type Module interface {
 
     ConfigurationRequired() bool
 
+    Validate(config *jwebparameter.Yaml) error
+
     Boot(kernel *jwebkernel.Kernel, config *jwebparameter.Yaml)
 }

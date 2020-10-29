@@ -96,9 +96,14 @@ func (j *Jweb) bootModule(module jwebmodule.Module) {
         jweberror.Fatal(jweberror.New(`multiple modules registered for name "%v"`, name))
     }
 
-    j.moduleList[name] = module
+    config := jwebmodule.LoadConfig(module, j.kernel)
 
-    module.Boot(j.kernel, jwebmodule.LoadConfig(module, j.kernel))
+    err := module.Validate(config)
+    jweberror.Fatal(err)
+
+    module.Boot(j.kernel, config)
+
+    j.moduleList[name] = module
 }
 
 func (j *Jweb) handleError() {

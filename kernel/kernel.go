@@ -9,7 +9,7 @@ import (
 func New(rootDir string) *Kernel {
     kernel := Kernel{}
 
-    kernel.rootDir = rootDir + `/`
+    kernel.rootDir = rootDir
 
     kernel.environment = jwebenvironment.New(rootDir)
 
