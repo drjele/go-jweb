@@ -8,6 +8,7 @@ It is a work in progress and any contributions are welcomed.
 * module mechanism
 * yaml config files and separate config files for each module
 * module config structure
+* maybe move database module to different repository
 
 ## Usage
 ```go
