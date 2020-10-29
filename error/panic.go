@@ -2,6 +2,7 @@ package jweberror
 
 import (
     `log`
+    `runtime/debug`
 )
 
 /** @todo add logging */
@@ -18,6 +19,8 @@ func Fatal(err error) {
     if err == nil {
         return
     }
+
+    debug.PrintStack()
 
     log.Fatal(err)
 }

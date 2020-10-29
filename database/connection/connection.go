@@ -1,5 +1,10 @@
 package jwebconnection
 
+import (
+    jweberror `gitlab.com/drjele-go/jweb/error`
+    jwebslice `gitlab.com/drjele-go/jweb/utility/slice`
+)
+
 const (
     DriverMysql = `mysql`
     DriverMongo = `mongo`
@@ -8,6 +13,10 @@ const (
 type Map map[string]*Connection
 
 func New(driver, hostname, port, username, password, database string) *Connection {
+    if jwebslice.StringInSlice(driver, []string{DriverMysql, DriverMongo}) == false {
+        jweberror.Fatal(jweberror.New(`invalid driver "%v"`, driver))
+    }
+
     return &Connection{
         driver:   driver,
         hostname: hostname,

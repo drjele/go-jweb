@@ -98,9 +98,6 @@ func (j *Jweb) bootModule(module jwebmodule.Module) {
 
     config := jwebmodule.LoadConfig(module, j.kernel)
 
-    err := module.Validate(config)
-    jweberror.Fatal(err)
-
     module.Boot(j.kernel, config)
 
     j.moduleList[name] = module
