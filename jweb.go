@@ -81,6 +81,8 @@ func (j *Jweb) GetModule(name string) jwebmodule.Module {
 }
 
 func (j *Jweb) bootModules(moduleList jwebmodule.List) {
+    j.moduleList = jwebmodule.Map{}
+
     for _, module := range moduleList {
         j.bootModule(module)
     }
