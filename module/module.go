@@ -1,6 +1,7 @@
 package jwebmodule
 
 import (
+    jwebparameter `gitlab.com/drjele-go/jweb/config/parameter`
     jwebkernel `gitlab.com/drjele-go/jweb/kernel`
 )
 
@@ -12,5 +13,5 @@ type Module interface {
 
     ConfigurationRequired() bool
 
-    Boot(kernel *jwebkernel.Kernel)
+    Boot(kernel *jwebkernel.Kernel, config *jwebparameter.Yaml)
 }

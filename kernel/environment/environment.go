@@ -16,27 +16,36 @@ const (
     EnvProd = `prod`
 )
 
-func New() *Environment {
-    e := Environment{}
+func New(rootDir string) *Environment {
+    environment := Environment{}
 
     /** @todo validate minimal environment vars */
-    params := e.loadDotEnv()
+    params := environment.loadDotEnv(rootDir)
 
-    e.params = jwebparameter.NewMap(params)
+    fullMap := jwebparameter.NewMap(params)
+    /** parameters with defaults should be initialized here */
+    environment.defaultMode = fullMap.GetParamWithDefault(`DEFAULT_MODE`, ModeHttp)
+    delete(params, `DEFAULT_MODE`)
+    environment.env = fullMap.GetParamWithDefault(`ENV`, EnvProd)
+    delete(params, `ENV`)
 
-    return &e
+    environment.params = jwebparameter.NewMap(params)
+
+    return &environment
 }
 
 type Environment struct {
-    params *jwebparameter.Map
+    params      *jwebparameter.Map
+    defaultMode string
+    env         string
 }
 
 func (e *Environment) GetDefaultMode() string {
-    return e.params.GetParamWithDefault(`DEFAULT_MODE`, ModeHttp)
+    return e.defaultMode
 }
 
 func (e *Environment) GetEnv() string {
-    return e.params.GetParamWithDefault(`ENV`, EnvProd)
+    return e.env
 }
 
 func (e *Environment) GetParam(param string) string {
@@ -47,13 +56,13 @@ func (e *Environment) GetParamWithDefault(param string, defaultValue string) str
     return e.params.GetParamWithDefault(param, defaultValue)
 }
 
-func (e *Environment) loadDotEnv() map[string]string {
+func (e *Environment) loadDotEnv(rootDir string) map[string]string {
     var params map[string]string
 
-    files := []string{`.env`}
+    files := []string{rootDir + `.env`}
 
-    if jwebfile.Exists(`.env.local`) {
-        files = append(files, `.env.local`)
+    if jwebfile.Exists(rootDir + `.env.local`) {
+        files = append(files, rootDir+`.env.local`)
     }
 
     params, err := godotenv.Read(files...)

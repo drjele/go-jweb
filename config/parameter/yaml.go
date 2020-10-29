@@ -1,9 +1,9 @@
 package jwebparameter
 
 import (
-    "github.com/knadh/koanf"
-    "github.com/knadh/koanf/parsers/yaml"
-    "github.com/knadh/koanf/providers/file"
+    `github.com/knadh/koanf`
+    `github.com/knadh/koanf/parsers/yaml`
+    `github.com/knadh/koanf/providers/file`
 
     jweberror `gitlab.com/drjele-go/jweb/error`
 )

@@ -6,10 +6,12 @@ import (
     jwebflag `gitlab.com/drjele-go/jweb/kernel/flag`
 )
 
-func New() *Kernel {
+func New(rootDir string) *Kernel {
     kernel := Kernel{}
 
-    kernel.environment = jwebenvironment.New()
+    kernel.rootDir = rootDir + `/`
+
+    kernel.environment = jwebenvironment.New(rootDir)
 
     kernel.config = jwebconfig.New(kernel.environment)
 
@@ -19,9 +21,14 @@ func New() *Kernel {
 }
 
 type Kernel struct {
+    rootDir     string
     environment *jwebenvironment.Environment
     config      *jwebconfig.Config
     flags       *jwebflag.Flag
+}
+
+func (k *Kernel) GetRootDir() string {
+    return k.rootDir
 }
 
 func (k *Kernel) GetEnvironment() *jwebenvironment.Environment {

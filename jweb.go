@@ -3,6 +3,7 @@ package jweb
 import (
     `flag`
     `fmt`
+    `os`
 
     jwebcli `gitlab.com/drjele-go/jweb/cli`
     jwebcommand `gitlab.com/drjele-go/jweb/cli/command`
@@ -21,7 +22,11 @@ func New(
 ) *Jweb {
     /** @todo maybe split initialization to a boot function */
 
-    kernel := jwebkernel.New()
+    dir, err := os.Getwd()
+    jweberror.Fatal(err)
+
+    /** @todo maybe not add the trailing slash */
+    kernel := jwebkernel.New(dir + `/`)
 
     jweb := Jweb{
         kernel:      kernel,
@@ -62,6 +67,10 @@ func (j *Jweb) Run() {
     }
 }
 
+func (j *Jweb) GetKernel() *jwebkernel.Kernel {
+    return j.kernel
+}
+
 func (j *Jweb) GetModule(name string) jwebmodule.Module {
     module, ok := j.moduleList[name]
     if ok == true {
@@ -73,23 +82,21 @@ func (j *Jweb) GetModule(name string) jwebmodule.Module {
 
 func (j *Jweb) bootModules(moduleList jwebmodule.List) {
     for _, module := range moduleList {
-        name := module.GetName()
-
-        _, ok := j.moduleList[name]
-        if ok == true {
-            jweberror.Fatal(jweberror.New(`multiple modules registered for name "%v"`, name))
-        }
-
-        j.moduleList[name] = module
-
-        // var config Config
-        //
-        // if module.ConfigurationRequired() == true {
-        //     config = ConfigLoader.Load(name + `.yaml`)
-        // }
-        //
-        // module.Boot(j.kernel, config)
+        j.bootModule(module)
     }
+}
+
+func (j *Jweb) bootModule(module jwebmodule.Module) {
+    name := module.GetName()
+
+    _, ok := j.moduleList[name]
+    if ok == true {
+        jweberror.Fatal(jweberror.New(`multiple modules registered for name "%v"`, name))
+    }
+
+    j.moduleList[name] = module
+
+    module.Boot(j.kernel, jwebmodule.LoadConfig(module, j.kernel))
 }
 
 func (j *Jweb) handleError() {
