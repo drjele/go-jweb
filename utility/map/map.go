@@ -5,18 +5,24 @@ import (
 )
 
 func CheckKeysMatch(keys []string, mapToCheck map[string]interface{}) error {
+    mapToCheckKeys := map[string]interface{}{}
+
+    for key, _ := range mapToCheck {
+        mapToCheckKeys[key] = true
+    }
+
     for _, key := range keys {
-        _, ok := mapToCheck[key]
+        _, ok := mapToCheckKeys[key]
 
         if ok == false {
             return jweberror.New(`the key "%v" is missing`, key)
         }
 
-        delete(mapToCheck, key)
+        delete(mapToCheckKeys, key)
     }
 
-    if len(mapToCheck) > 0 {
-        return jweberror.New(`extra keys were found: %v`, GetKeys(mapToCheck))
+    if len(mapToCheckKeys) > 0 {
+        return jweberror.New(`extra keys were found: %v`, GetKeys(mapToCheckKeys))
     }
 
     return nil

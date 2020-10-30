@@ -5,6 +5,14 @@ import (
     jweberror `gitlab.com/drjele-go/jweb/error`
 )
 
+func New() *Config {
+    config := Config{}
+
+    config.connections = jwebconnection.Map{}
+
+    return &config
+}
+
 type Config struct {
     connections jwebconnection.Map
 }

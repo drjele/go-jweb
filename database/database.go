@@ -1,13 +1,10 @@
 package jwebdatabase
 
 import (
-    `fmt`
-    `os`
-
     jwebparameter `gitlab.com/drjele-go/jweb/config/parameter`
     jwebconfig `gitlab.com/drjele-go/jweb/database/config`
     jwebconnection `gitlab.com/drjele-go/jweb/database/connection`
-    jwebregistry `gitlab.com/drjele-go/jweb/database/registry`
+    jwebmanager `gitlab.com/drjele-go/jweb/database/manager`
     jweberror `gitlab.com/drjele-go/jweb/error`
     jwebkernel `gitlab.com/drjele-go/jweb/kernel`
     jwebconvert `gitlab.com/drjele-go/jweb/utility/convert`
@@ -19,12 +16,17 @@ const (
 )
 
 func New() *Database {
-    return &Database{}
+    database := Database{}
+
+    database.managers = jwebmanager.Map{}
+
+    return &database
 }
 
 type Database struct {
-    connections jwebconnection.Map
-    registry    *jwebregistry.Registry
+    kernel   *jwebkernel.Kernel
+    config   *jwebconfig.Config
+    managers jwebmanager.Map
 }
 
 func (d *Database) GetName() string {
@@ -36,17 +38,44 @@ func (d *Database) ConfigurationRequired() bool {
 }
 
 func (d *Database) Boot(kernel *jwebkernel.Kernel, yamlConfig *jwebparameter.Yaml) {
-    _ = d.buildConfig(yamlConfig)
+    d.kernel = kernel
 
-    os.Exit(1)
+    d.config = d.buildConfig(yamlConfig)
+}
 
-    d.registry = jwebregistry.New()
+func (d *Database) GetManager(name string) jwebmanager.Manager {
+    _, ok := d.managers[name]
+
+    if ok == false {
+        d.managers[name] = d.initManager(d.config.GetConnection(name))
+    }
+
+    manager, _ := d.managers[name]
+
+    return manager
+}
+
+func (d *Database) initManager(connection *jwebconnection.Connection) jwebmanager.Manager {
+    var db jwebmanager.Manager
+
+    switch connection.GetDriver() {
+    case jwebconnection.DriverMysql:
+        db = jwebmanager.NewMysql(connection, d.kernel.GetEnvironment().GetEnv())
+        break
+    case jwebconnection.DriverMongo:
+        db = jwebmanager.NewMongo(connection)
+        break
+    default:
+        jweberror.Fatal(jweberror.New(`invalid connection driver "%v"`, connection.GetDriver()))
+    }
+
+    return db
 }
 
 func (d *Database) buildConfig(yamlConfig *jwebparameter.Yaml) *jwebconfig.Config {
     /** @todo add connection names in errors */
 
-    config := jwebconfig.Config{}
+    config := jwebconfig.New()
 
     connections, err := jwebconvert.InterfaceToMap(yamlConfig.GetParam(`connections`))
     jweberror.Fatal(err)
@@ -59,10 +88,7 @@ func (d *Database) buildConfig(yamlConfig *jwebparameter.Yaml) *jwebconfig.Confi
         err = jwebmap.CheckKeysMatch(connectionKeys, connectionDataMap)
         jweberror.Fatal(err)
 
-        fmt.Println(connectionName, connectionData, connectionDataMap)
-        os.Exit(12)
-
-        connectionDataMapString, err := jwebconvert.InterfaceToMapString(connectionData)
+        connectionDataMapString, err := jwebconvert.MapInterfaceToString(connectionDataMap)
         jweberror.Fatal(err)
 
         connection := jwebconnection.New(
@@ -77,5 +103,5 @@ func (d *Database) buildConfig(yamlConfig *jwebparameter.Yaml) *jwebconfig.Confi
         config.AddConnection(connectionName, connection)
     }
 
-    return &config
+    return config
 }

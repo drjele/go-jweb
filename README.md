@@ -11,6 +11,8 @@ It is a work in progress and any contributions are welcomed.
 * maybe move database module to different repository
 
 ## Usage
+* the **doc** folder contains **.dist** files with example configurations
+
 ```go
 package main
 

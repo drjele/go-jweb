@@ -1,0 +1,8 @@
+connections:
+  test:
+    driver: 'mysql'
+    hostname: 'localhost'
+    port: '3306'
+    username: 'test'
+    password: 'test'
+    database: 'test'

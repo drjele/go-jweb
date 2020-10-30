@@ -1,8 +1,6 @@
 package jwebconvert
 
 import (
-    `fmt`
-    `os`
     `strconv`
 
     jweberror `gitlab.com/drjele-go/jweb/error`
@@ -24,13 +22,17 @@ func InterfaceToMap(valueToConvert interface{}) (convertedValue map[string]inter
     return
 }
 
-func InterfaceToMapString(valueToConvert interface{}) (convertedValue map[string]string, err error) {
-    fmt.Println(valueToConvert)
-    os.Exit(12)
+func MapInterfaceToString(valueToConvert map[string]interface{}) (convertedValue map[string]string, err error) {
+    convertedValue = map[string]string{}
 
-    convertedValue, ok := valueToConvert.(map[string]string)
-    if ok == false {
-        err = jweberror.New(`could not convert interface to map`)
+    for key, value := range valueToConvert {
+        stringValue, ok := value.(string)
+
+        if ok == false {
+            err = jweberror.New(`could not convert interface to string fo "%v"`, key)
+        }
+
+        convertedValue[key] = stringValue
     }
 
     return

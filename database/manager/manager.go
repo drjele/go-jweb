@@ -7,6 +7,8 @@ import (
     jwebconnection `gitlab.com/drjele-go/jweb/database/connection`
 )
 
+type Map map[string]Manager
+
 type Manager interface {
     GetConnection() *jwebconnection.Connection
 
