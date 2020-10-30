@@ -74,6 +74,15 @@ func (r *Router) attachRoute(engine *gin.Engine, route *jwebroute.Route) {
     case jwebroute.MethodPost:
         engine.POST(route.GetPath(), handler)
         break
+    case jwebroute.MethodPut:
+        engine.PUT(route.GetPath(), handler)
+        break
+    case jwebroute.MethodPatch:
+        engine.PATCH(route.GetPath(), handler)
+        break
+    case jwebroute.MethodDelete:
+        engine.DELETE(route.GetPath(), handler)
+        break
     default:
         jweberror.Fatal(jweberror.New(`no handler defined for http method "%v"`, route.GetMethod()))
         break

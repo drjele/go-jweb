@@ -33,3 +33,9 @@ func (m *Map) GetParamWithDefault(param string, defaultValue string) string {
 
     return value
 }
+
+func (m *Map) HasParam(param string) bool {
+    _, ok := m.params[param]
+
+    return ok
+}

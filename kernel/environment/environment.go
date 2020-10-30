@@ -56,6 +56,10 @@ func (e *Environment) GetParamWithDefault(param string, defaultValue string) str
     return e.params.GetParamWithDefault(param, defaultValue)
 }
 
+func (e *Environment) HasParam(param string) bool {
+    return e.params.HasParam(param)
+}
+
 func (e *Environment) loadDotEnv(rootDir string) map[string]string {
     var params map[string]string
 

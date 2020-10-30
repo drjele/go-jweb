@@ -3,6 +3,7 @@ package jwebparameter
 import (
     `github.com/knadh/koanf`
     `github.com/knadh/koanf/parsers/yaml`
+    `github.com/knadh/koanf/providers/confmap`
     `github.com/knadh/koanf/providers/file`
 
     jweberror `gitlab.com/drjele-go/jweb/error`
@@ -12,7 +13,7 @@ const (
     PathDelimiter = `.`
 )
 
-func NewYaml(files []string) *Yaml {
+func NewYamlFromFiles(files []string) *Yaml {
     pb := Yaml{}
 
     k := koanf.New(PathDelimiter)
@@ -30,8 +31,28 @@ func NewYaml(files []string) *Yaml {
     return &pb
 }
 
+func NewYamlFromMap(m map[string]interface{}) *Yaml {
+    pb := Yaml{}
+
+    k := koanf.New(PathDelimiter)
+
+    if err := k.Load(confmap.Provider(m, PathDelimiter), nil); err != nil {
+        jweberror.Fatal(
+            jweberror.New(`error loading config: %v`, err),
+        )
+    }
+
+    pb.params = k
+
+    return &pb
+}
+
 type Yaml struct {
     params *koanf.Koanf
+}
+
+func (y *Yaml) Keys() []string {
+    return y.params.Keys()
 }
 
 func (y *Yaml) GetParam(param string) interface{} {

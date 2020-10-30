@@ -79,7 +79,7 @@ func (j *Jweb) GetKernel() *jwebkernel.Kernel {
 
 func (j *Jweb) GetModule(name string) jwebmodule.Module {
     module, ok := j.moduleList[name]
-    if ok == true {
+    if ok == false {
         jweberror.Fatal(jweberror.New(`no module registered for name "%v"`, name))
     }
 

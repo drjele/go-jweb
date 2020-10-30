@@ -1,8 +1,15 @@
 connections:
-  test:
+  first_connection_name:
     driver: 'mysql'
     hostname: 'localhost'
     port: '3306'
-    username: 'test'
-    password: 'test'
-    database: 'test'
+    username: 'username'
+    password: 'password'
+    database: 'database'
+  second_connection_name:
+    driver: 'mongo'
+    hostname: 'localhost'
+    port: '3306'
+    username: 'username'
+    password: 'password'
+    database: 'database'

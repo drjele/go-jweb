@@ -20,6 +20,7 @@ func Fatal(err error) {
         return
     }
 
+    /** @todo only in dev mode */
     debug.PrintStack()
 
     log.Fatal(err)

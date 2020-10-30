@@ -7,8 +7,11 @@ import (
 )
 
 const (
-    MethodGet  = `GET`
-    MethodPost = `POST`
+    MethodGet    = `GET`
+    MethodPost   = `POST`
+    MethodPut    = `PUT`
+    MethodPatch  = `PATCH`
+    MethodDelete = `DELETE`
 )
 
 type List []*Route
