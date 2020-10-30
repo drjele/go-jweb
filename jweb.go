@@ -16,8 +16,6 @@ import (
 )
 
 func New(
-    routeList jwebroute.List,
-    commandList jwebcommand.List,
     moduleList jwebmodule.List,
 ) *Jweb {
     /** @todo maybe split initialization to a boot function */
@@ -30,8 +28,8 @@ func New(
 
     jweb := Jweb{
         kernel:      kernel,
-        routeList:   routeList,
-        commandList: commandList,
+        routeList:   jwebroute.List{},
+        commandList: jwebcommand.List{},
     }
 
     jweb.bootModules(moduleList)
@@ -44,6 +42,14 @@ type Jweb struct {
     kernel      *jwebkernel.Kernel
     routeList   jwebroute.List
     commandList jwebcommand.List
+}
+
+func (j *Jweb) SetRouteList(routeList jwebroute.List) {
+    j.routeList = routeList
+}
+
+func (j *Jweb) SetCommandList(commandList jwebcommand.List) {
+    j.commandList = commandList
 }
 
 func (j *Jweb) Run() {

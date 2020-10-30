@@ -9,6 +9,7 @@ It is a work in progress and any contributions are welcomed.
 * yaml config files and separate config files for each module
 * module config structure
 * maybe move database module to different repository
+* resolve **config.yaml** params based on **.env** params
 
 ## Usage
 * the **doc** folder contains **.dist** files with example configurations
