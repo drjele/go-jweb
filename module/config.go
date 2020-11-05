@@ -19,7 +19,7 @@ func LoadConfig(module Module, kernel *jwebkernel.Kernel) *jwebparameter.Yaml {
     }
 
     filePath := kernel.GetRootDir() + `config/` + module.GetName() + `.yaml`
-    log.Printf(`loading config %v`, filePath)
+    log.Printf(`loading config "%v"`+"\n", filePath)
 
     if jwebfile.Exists(filePath) == false {
         jweberror.Fatal(

@@ -3,6 +3,7 @@ package jweb
 import (
     `flag`
     `fmt`
+    `log`
     `os`
 
     jwebcli `gitlab.com/drjele-go/jweb/cli`
@@ -90,7 +91,11 @@ func (j *Jweb) bootModules(moduleList jwebmodule.List) {
     j.moduleList = jwebmodule.Map{}
 
     for _, module := range moduleList {
+        log.Printf(`boot start "%v"`+"\n", module.GetName())
+
         j.bootModule(module)
+
+        log.Printf(`boot end  "%v"`+"\n", module.GetName())
     }
 }
 
