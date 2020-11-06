@@ -5,8 +5,9 @@ import (
     `runtime/debug`
 )
 
-/** @todo add logging */
+/** @todo maybe also add an error handling module */
 
+/** @deprecated will add a logger module */
 func Panic(err error) {
     if err == nil {
         return
@@ -15,6 +16,7 @@ func Panic(err error) {
     panic(err)
 }
 
+/** @deprecated will add a logger module */
 func Fatal(err error) {
     if err == nil {
         return

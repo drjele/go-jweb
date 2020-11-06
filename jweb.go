@@ -95,7 +95,7 @@ func (j *Jweb) bootModules(moduleList jwebmodule.List) {
 
         j.bootModule(module)
 
-        log.Printf(`boot end  "%v"`+"\n", module.GetName())
+        log.Printf(`boot end "%v"`+"\n", module.GetName())
     }
 }
 
