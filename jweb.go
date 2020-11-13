@@ -5,21 +5,43 @@ import (
     `fmt`
     `log`
     `os`
+    `runtime/debug`
+    `sync`
 
-    jwebcli `gitlab.com/drjele-go/jweb/cli`
-    jwebcommand `gitlab.com/drjele-go/jweb/cli/command`
-    jweberror `gitlab.com/drjele-go/jweb/error`
-    jwebhttp `gitlab.com/drjele-go/jweb/http`
-    jwebroute `gitlab.com/drjele-go/jweb/http/routing/route`
-    jwebkernel `gitlab.com/drjele-go/jweb/kernel`
-    jwebenvironment `gitlab.com/drjele-go/jweb/kernel/environment`
-    jwebmodule `gitlab.com/drjele-go/jweb/module`
+    jwebcli `gitlab.com/drjele-go/jweb/src/cli`
+    command `gitlab.com/drjele-go/jweb/src/cli/command`
+    jweberror `gitlab.com/drjele-go/jweb/src/error`
+    jwebhttp `gitlab.com/drjele-go/jweb/src/http`
+    route `gitlab.com/drjele-go/jweb/src/http/routing/route`
+    jwebkernel `gitlab.com/drjele-go/jweb/src/kernel`
+    environment `gitlab.com/drjele-go/jweb/src/kernel/environment`
+    jwebmodule `gitlab.com/drjele-go/jweb/src/module`
 )
 
-func New(
+var (
+    jweb *Jweb
+    once sync.Once
+)
+
+func Get(
     moduleList jwebmodule.List,
 ) *Jweb {
-    /** @todo maybe split initialization to a boot function */
+    once.Do(
+        func() {
+            jweb = newInstance(moduleList)
+        },
+    )
+
+    return jweb
+}
+
+func newInstance(moduleList jwebmodule.List) *Jweb {
+    defer handleError()
+
+    jweb := Jweb{
+        routeList:   route.List{},
+        commandList: command.List{},
+    }
 
     dir, err := os.Getwd()
     jweberror.Fatal(err)
@@ -27,11 +49,10 @@ func New(
     /** @todo maybe not add the trailing slash */
     kernel := jwebkernel.New(dir + `/`)
 
-    jweb := Jweb{
-        kernel:      kernel,
-        routeList:   jwebroute.List{},
-        commandList: jwebcommand.List{},
-    }
+    jweb.kernel = kernel
+    jweb.errorHandler = jweberror.NewHandler(
+        kernel.GetEnvironment().GetEnv(),
+    )
 
     jweb.bootModules(moduleList)
 
@@ -39,17 +60,18 @@ func New(
 }
 
 type Jweb struct {
-    moduleList  jwebmodule.Map
-    kernel      *jwebkernel.Kernel
-    routeList   jwebroute.List
-    commandList jwebcommand.List
+    kernel       *jwebkernel.Kernel
+    errorHandler *jweberror.Handler
+    moduleList   jwebmodule.Map
+    routeList    route.List
+    commandList  command.List
 }
 
-func (j *Jweb) SetRouteList(routeList jwebroute.List) {
+func (j *Jweb) SetRouteList(routeList route.List) {
     j.routeList = routeList
 }
 
-func (j *Jweb) SetCommandList(commandList jwebcommand.List) {
+func (j *Jweb) SetCommandList(commandList command.List) {
     j.commandList = commandList
 }
 
@@ -57,14 +79,14 @@ func (j *Jweb) Run() {
     defer j.handleError()
 
     switch j.kernel.GetFlags().GetMode() {
-    case jwebenvironment.ModeHttp:
+    case environment.ModeHttp:
         jwebhttp.Run(
             j.kernel.GetEnvironment(),
             j.kernel.GetConfig(),
             j.routeList,
         )
         break
-    case jwebenvironment.ModeCli:
+    case environment.ModeCli:
         jwebcli.Run(j.kernel.GetConfig().GetCli(), j.commandList)
         break
     default:
@@ -85,6 +107,38 @@ func (j *Jweb) GetModule(name string) jwebmodule.Module {
     }
 
     return module
+}
+
+func (j *Jweb) Panic(err error) {
+    if err == nil {
+        return
+    }
+
+    if j.errorHandler == nil {
+        panic(err)
+
+        return
+    }
+
+    j.errorHandler.Panic(err)
+}
+
+func (j *Jweb) Fatal(err error) {
+    if err == nil {
+        return
+    }
+
+    if j.errorHandler == nil {
+        defer func() {
+            debug.PrintStack()
+        }()
+
+        log.Fatal(err)
+
+        return
+    }
+
+    j.errorHandler.Fatal(err)
 }
 
 func (j *Jweb) bootModules(moduleList jwebmodule.List) {
@@ -115,6 +169,10 @@ func (j *Jweb) bootModule(module jwebmodule.Module) {
 }
 
 func (j *Jweb) handleError() {
+    handleError()
+}
+
+func handleError() {
     r := recover()
 
     if r == nil {

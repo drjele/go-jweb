@@ -22,31 +22,31 @@ import (
 
     `github.com/gin-gonic/gin`
     `gitlab.com/drjele-go/jweb`
-    jwebcommand `gitlab.com/drjele-go/jweb/cli/command`
-    jwebresponse `gitlab.com/drjele-go/jweb/http/response`
-    jwebroute `gitlab.com/drjele-go/jweb/http/routing/route`
+    `gitlab.com/drjele-go/jweb/src/cli/command`
+    `gitlab.com/drjele-go/jweb/src/http/response`
+    `gitlab.com/drjele-go/jweb/src/http/routing/route`
 )
 
 func main() {
-    var commandList jwebcommand.List
+    var commandList command.List
 
     j := jweb.New(getRouteList(), commandList)
 
     j.Run()
 }
 
-func getRouteList() jwebroute.List {
-    routeList := jwebroute.List{}
+func getRouteList() route.List {
+    routeList := route.List{}
 
     routeList = append(
         routeList,
-        jwebroute.New(
-            jwebroute.MethodGet,
+        route.New(
+            route.MethodGet,
             `/`,
-            func(context *gin.Context) jwebresponse.Response {
-                payload := jwebresponse.JsonPayload{`time`: time.Now()}
+            func(context *gin.Context) response.Response {
+                payload := response.JsonPayload{`time`: time.Now()}
 
-                response := jwebresponse.NewJson(context)
+                response := response.NewJson(context)
 
                 response.SetPayload(payload)
 
