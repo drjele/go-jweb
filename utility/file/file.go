@@ -1,4 +1,4 @@
-package jwebfile
+package file
 
 import (
     `os`

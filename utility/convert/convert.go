@@ -1,4 +1,4 @@
-package jwebconvert
+package convert
 
 import (
     `strconv`

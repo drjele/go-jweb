@@ -1,4 +1,4 @@
-package jwebflag
+package flag
 
 import (
     `flag`

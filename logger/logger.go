@@ -1,8 +1,8 @@
 package logger
 
 import (
-    jwebparameter `gitlab.com/drjele-go/jweb/config/parameter`
-    jwebkernel `gitlab.com/drjele-go/jweb/kernel`
+    `gitlab.com/drjele-go/jweb/config/parameter`
+    `gitlab.com/drjele-go/jweb/kernel`
 )
 
 const (
@@ -16,7 +16,7 @@ func New() *Logger {
 }
 
 type Logger struct {
-    kernel *jwebkernel.Kernel
+    kernel *kernel.Kernel
 }
 
 func (l *Logger) GetName() string {
@@ -27,6 +27,6 @@ func (l *Logger) ConfigurationRequired() bool {
     return true
 }
 
-func (l *Logger) Boot(kernel *jwebkernel.Kernel, yamlConfig *jwebparameter.Yaml) {
+func (l *Logger) Boot(kernel *kernel.Kernel, yamlConfig *parameter.Yaml) {
     l.kernel = kernel
 }

@@ -6,13 +6,13 @@ import (
     `log`
     `os`
 
-    jwebcli `gitlab.com/drjele-go/jweb/cli`
-    jwebcommand `gitlab.com/drjele-go/jweb/cli/command`
+    `gitlab.com/drjele-go/jweb/cli`
+    `gitlab.com/drjele-go/jweb/cli/command`
     jweberror `gitlab.com/drjele-go/jweb/error`
     jwebhttp `gitlab.com/drjele-go/jweb/http`
-    jwebroute `gitlab.com/drjele-go/jweb/http/routing/route`
+    `gitlab.com/drjele-go/jweb/http/routing/route`
     jwebkernel `gitlab.com/drjele-go/jweb/kernel`
-    jwebenvironment `gitlab.com/drjele-go/jweb/kernel/environment`
+    `gitlab.com/drjele-go/jweb/kernel/environment`
     jwebmodule `gitlab.com/drjele-go/jweb/module`
 )
 
@@ -29,8 +29,8 @@ func New(
 
     jweb := Jweb{
         kernel:      kernel,
-        routeList:   jwebroute.List{},
-        commandList: jwebcommand.List{},
+        routeList:   route.List{},
+        commandList: command.List{},
     }
 
     jweb.bootModules(moduleList)
@@ -41,15 +41,15 @@ func New(
 type Jweb struct {
     moduleList  jwebmodule.Map
     kernel      *jwebkernel.Kernel
-    routeList   jwebroute.List
-    commandList jwebcommand.List
+    routeList   route.List
+    commandList command.List
 }
 
-func (j *Jweb) SetRouteList(routeList jwebroute.List) {
+func (j *Jweb) SetRouteList(routeList route.List) {
     j.routeList = routeList
 }
 
-func (j *Jweb) SetCommandList(commandList jwebcommand.List) {
+func (j *Jweb) SetCommandList(commandList command.List) {
     j.commandList = commandList
 }
 
@@ -57,15 +57,15 @@ func (j *Jweb) Run() {
     defer j.handleError()
 
     switch j.kernel.GetFlags().GetMode() {
-    case jwebenvironment.ModeHttp:
+    case environment.ModeHttp:
         jwebhttp.Run(
             j.kernel.GetEnvironment(),
             j.kernel.GetConfig(),
             j.routeList,
         )
         break
-    case jwebenvironment.ModeCli:
-        jwebcli.Run(j.kernel.GetConfig().GetCli(), j.commandList)
+    case environment.ModeCli:
+        cli.Run(j.kernel.GetConfig().GetCli(), j.commandList)
         break
     default:
         flag.PrintDefaults()

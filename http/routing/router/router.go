@@ -1,4 +1,4 @@
-package jwebrouter
+package router
 
 import (
     `fmt`
@@ -11,7 +11,7 @@ import (
     jweberror `gitlab.com/drjele-go/jweb/error`
     jwebresponse `gitlab.com/drjele-go/jweb/http/response`
     jwebroute `gitlab.com/drjele-go/jweb/http/routing/route`
-    jwebenvironment `gitlab.com/drjele-go/jweb/kernel/environment`
+    `gitlab.com/drjele-go/jweb/kernel/environment`
 )
 
 func New(env string, routeList jwebroute.List) *Router {
@@ -55,7 +55,7 @@ func (r *Router) GetHttpHandler() http.Handler {
 func (r *Router) getEnv() string {
     env := gin.DebugMode
 
-    if r.env == jwebenvironment.EnvProd {
+    if r.env == environment.EnvProd {
         env = gin.ReleaseMode
     }
 
@@ -119,7 +119,7 @@ func (r *Router) handleError(context *gin.Context) {
         `error`: fmt.Sprintf(`%v`, recoverData),
         `time`:  time.Now(),
     }
-    if r.env == jwebenvironment.EnvDev {
+    if r.env == environment.EnvDev {
         jsonPayload[`trace`] = string(debug.Stack())
     }
 

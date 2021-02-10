@@ -1,4 +1,4 @@
-package jwebslice
+package slice
 
 func StringInSlice(needle string, haystack []string) bool {
     for _, x := range haystack {

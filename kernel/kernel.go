@@ -1,9 +1,9 @@
-package jwebkernel
+package kernel
 
 import (
-    jwebconfig `gitlab.com/drjele-go/jweb/kernel/config`
-    jwebenvironment `gitlab.com/drjele-go/jweb/kernel/environment`
-    jwebflag `gitlab.com/drjele-go/jweb/kernel/flag`
+    `gitlab.com/drjele-go/jweb/kernel/config`
+    `gitlab.com/drjele-go/jweb/kernel/environment`
+    `gitlab.com/drjele-go/jweb/kernel/flag`
 )
 
 func New(rootDir string) *Kernel {
@@ -11,34 +11,34 @@ func New(rootDir string) *Kernel {
 
     kernel.rootDir = rootDir
 
-    kernel.environment = jwebenvironment.New(rootDir)
+    kernel.environment = environment.New(rootDir)
 
-    kernel.config = jwebconfig.New(kernel.environment)
+    kernel.config = config.New(kernel.environment)
 
-    kernel.flags = jwebflag.New(kernel.environment)
+    kernel.flags = flag.New(kernel.environment)
 
     return &kernel
 }
 
 type Kernel struct {
     rootDir     string
-    environment *jwebenvironment.Environment
-    config      *jwebconfig.Config
-    flags       *jwebflag.Flag
+    environment *environment.Environment
+    config      *config.Config
+    flags       *flag.Flag
 }
 
 func (k *Kernel) GetRootDir() string {
     return k.rootDir
 }
 
-func (k *Kernel) GetEnvironment() *jwebenvironment.Environment {
+func (k *Kernel) GetEnvironment() *environment.Environment {
     return k.environment
 }
 
-func (k *Kernel) GetConfig() *jwebconfig.Config {
+func (k *Kernel) GetConfig() *config.Config {
     return k.config
 }
 
-func (k *Kernel) GetFlags() *jwebflag.Flag {
+func (k *Kernel) GetFlags() *flag.Flag {
     return k.flags
 }

@@ -1,19 +1,19 @@
-package jwebconfig
+package config
 
 import (
-    jwebconfigcli `gitlab.com/drjele-go/jweb/cli/config`
-    jwebconfighttp `gitlab.com/drjele-go/jweb/http/config`
-    jwebenvironment `gitlab.com/drjele-go/jweb/kernel/environment`
+    configcli `gitlab.com/drjele-go/jweb/cli/config`
+    confighttp `gitlab.com/drjele-go/jweb/http/config`
+    `gitlab.com/drjele-go/jweb/kernel/environment`
 )
 
-func New(environment *jwebenvironment.Environment) *Config {
+func New(environment *environment.Environment) *Config {
     c := Config{}
 
-    c.http = jwebconfighttp.New(
+    c.http = confighttp.New(
         environment.GetParam(`HTTP_HOST`),
     )
 
-    c.cli = jwebconfigcli.New(
+    c.cli = configcli.New(
         environment.GetParam(`CLI_NAME`),
         environment.GetParam(`CLI_DESCRIPTION`),
     )
@@ -22,14 +22,14 @@ func New(environment *jwebenvironment.Environment) *Config {
 }
 
 type Config struct {
-    http *jwebconfighttp.Config
-    cli  *jwebconfigcli.Config
+    http *confighttp.Config
+    cli  *configcli.Config
 }
 
-func (c *Config) GetHttp() *jwebconfighttp.Config {
+func (c *Config) GetHttp() *confighttp.Config {
     return c.http
 }
 
-func (c *Config) GetCli() *jwebconfigcli.Config {
+func (c *Config) GetCli() *configcli.Config {
     return c.cli
 }

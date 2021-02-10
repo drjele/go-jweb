@@ -1,9 +1,9 @@
-package jwebroute
+package route
 
 import (
     `github.com/gin-gonic/gin`
 
-    jwebresponse `gitlab.com/drjele-go/jweb/http/response`
+    `gitlab.com/drjele-go/jweb/http/response`
 )
 
 const (
@@ -16,7 +16,7 @@ const (
 
 type List []*Route
 type Map map[string]*Route
-type Handler func(*gin.Context) jwebresponse.Response
+type Handler func(*gin.Context) response.Response
 
 func New(method string, path string, handler Handler) *Route {
     return &Route{

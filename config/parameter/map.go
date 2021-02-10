@@ -1,4 +1,4 @@
-package jwebparameter
+package parameter
 
 import (
     jweberror `gitlab.com/drjele-go/jweb/error`

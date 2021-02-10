@@ -1,4 +1,4 @@
-package jwebrepository
+package repository
 
 import (
     `context`
@@ -7,16 +7,13 @@ import (
     `go.mongodb.org/mongo-driver/bson/primitive`
     `go.mongodb.org/mongo-driver/mongo`
 
-    jwebentity `gitlab.com/drjele-go/jweb/database/entity`
-    jwebmanager `gitlab.com/drjele-go/jweb/database/manager`
+    `gitlab.com/drjele-go/jweb/database/entity`
+    `gitlab.com/drjele-go/jweb/database/manager`
     jweberror `gitlab.com/drjele-go/jweb/error`
 )
 
-/** @todo format this to return basic types */
-type MongoAgregateResult []bson.M
-
 type Mongo struct {
-    Manager *jwebmanager.Mongo
+    Manager *manager.Mongo
 }
 
 func (m *Mongo) Agregate(result interface{}, collectionName string, filter bson.D, groupBy bson.D) {
@@ -81,7 +78,7 @@ func (m *Mongo) FindOne(result interface{}, collectionName string, filter interf
     jweberror.Panic(err)
 }
 
-func (m *Mongo) Insert(document jwebentity.Mongo) string {
+func (m *Mongo) Insert(document entity.Mongo) string {
     ctx := context.TODO()
 
     db := m.Manager.GetClientForMongo().Database(m.Manager.GetConnection().GetDatabase())

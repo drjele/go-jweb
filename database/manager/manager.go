@@ -1,16 +1,16 @@
-package jwebmanager
+package manager
 
 import (
     `go.mongodb.org/mongo-driver/mongo`
     `gorm.io/gorm`
 
-    jwebconnection `gitlab.com/drjele-go/jweb/database/connection`
+    `gitlab.com/drjele-go/jweb/database/connection`
 )
 
 type Map map[string]Manager
 
 type Manager interface {
-    GetConnection() *jwebconnection.Connection
+    GetConnection() *connection.Connection
 
     GetClient() interface{}
 

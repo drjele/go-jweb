@@ -1,4 +1,4 @@
-package jwebcommand
+package command
 
 import (
     `github.com/urfave/cli/v2`

@@ -1,8 +1,8 @@
-package jwebmodule
+package module
 
 import (
-    jwebparameter `gitlab.com/drjele-go/jweb/config/parameter`
-    jwebkernel `gitlab.com/drjele-go/jweb/kernel`
+    `gitlab.com/drjele-go/jweb/config/parameter`
+    `gitlab.com/drjele-go/jweb/kernel`
 )
 
 type List []Module
@@ -13,5 +13,5 @@ type Module interface {
 
     ConfigurationRequired() bool
 
-    Boot(kernel *jwebkernel.Kernel, config *jwebparameter.Yaml)
+    Boot(kernel *kernel.Kernel, config *parameter.Yaml)
 }

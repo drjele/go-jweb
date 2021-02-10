@@ -1,4 +1,4 @@
-package jwebentity
+package entity
 
 type Mongo interface {
     GetCollectionName() string

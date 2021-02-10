@@ -1,13 +1,13 @@
-package jwebdatabase
+package database
 
 import (
-    jwebparameter `gitlab.com/drjele-go/jweb/config/parameter`
+    `gitlab.com/drjele-go/jweb/config/parameter`
     jwebconfig `gitlab.com/drjele-go/jweb/database/config`
     jwebconnection `gitlab.com/drjele-go/jweb/database/connection`
     jwebmanager `gitlab.com/drjele-go/jweb/database/manager`
     jweberror `gitlab.com/drjele-go/jweb/error`
     jwebkernel `gitlab.com/drjele-go/jweb/kernel`
-    jwebconvert `gitlab.com/drjele-go/jweb/utility/convert`
+    `gitlab.com/drjele-go/jweb/utility/convert`
     jwebmap `gitlab.com/drjele-go/jweb/utility/map`
 )
 
@@ -37,7 +37,7 @@ func (d *Database) ConfigurationRequired() bool {
     return true
 }
 
-func (d *Database) Boot(kernel *jwebkernel.Kernel, yamlConfig *jwebparameter.Yaml) {
+func (d *Database) Boot(kernel *jwebkernel.Kernel, yamlConfig *parameter.Yaml) {
     d.kernel = kernel
 
     d.config = d.buildConfig(yamlConfig)
@@ -72,23 +72,23 @@ func (d *Database) initManager(connection *jwebconnection.Connection) jwebmanage
     return db
 }
 
-func (d *Database) buildConfig(yamlConfig *jwebparameter.Yaml) *jwebconfig.Config {
+func (d *Database) buildConfig(yamlConfig *parameter.Yaml) *jwebconfig.Config {
     /** @todo add connection names in errors */
 
     config := jwebconfig.New()
 
-    connections, err := jwebconvert.InterfaceToMap(yamlConfig.GetParam(`connections`))
+    connections, err := convert.InterfaceToMap(yamlConfig.GetParam(`connections`))
     jweberror.Fatal(err)
 
     connectionKeys := []string{`driver`, `hostname`, `port`, `username`, `password`, `database`}
     for connectionName, connectionData := range connections {
-        connectionDataMap, err := jwebconvert.InterfaceToMap(connectionData)
+        connectionDataMap, err := convert.InterfaceToMap(connectionData)
         jweberror.Fatal(err)
 
         err = jwebmap.CheckKeysMatch(connectionKeys, connectionDataMap)
         jweberror.Fatal(err)
 
-        connectionDataMapString, err := jwebconvert.MapInterfaceToString(connectionDataMap)
+        connectionDataMapString, err := convert.MapInterfaceToString(connectionDataMap)
         jweberror.Fatal(err)
 
         connection := jwebconnection.New(

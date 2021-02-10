@@ -1,11 +1,11 @@
-package jwebenvironment
+package environment
 
 import (
     `github.com/joho/godotenv`
 
-    jwebparameter `gitlab.com/drjele-go/jweb/config/parameter`
+    `gitlab.com/drjele-go/jweb/config/parameter`
     jweberror `gitlab.com/drjele-go/jweb/error`
-    jwebfile `gitlab.com/drjele-go/jweb/utility/file`
+    `gitlab.com/drjele-go/jweb/utility/file`
 )
 
 const (
@@ -22,20 +22,20 @@ func New(rootDir string) *Environment {
     /** @todo validate minimal environment vars */
     params := environment.loadDotEnv(rootDir)
 
-    fullMap := jwebparameter.NewMap(params)
+    fullMap := parameter.NewMap(params)
     /** parameters with defaults should be initialized here */
     environment.defaultMode = fullMap.GetParamWithDefault(`DEFAULT_MODE`, ModeHttp)
     delete(params, `DEFAULT_MODE`)
     environment.env = fullMap.GetParamWithDefault(`ENV`, EnvProd)
     delete(params, `ENV`)
 
-    environment.params = jwebparameter.NewMap(params)
+    environment.params = parameter.NewMap(params)
 
     return &environment
 }
 
 type Environment struct {
-    params      *jwebparameter.Map
+    params      *parameter.Map
     defaultMode string
     env         string
 }
@@ -66,7 +66,7 @@ func (e *Environment) loadDotEnv(rootDir string) map[string]string {
     files := []string{rootDir + `.env`}
 
     envLocal := rootDir + `.env.local`
-    if jwebfile.Exists(envLocal) {
+    if file.Exists(envLocal) {
         files = append(files, envLocal)
     }
 

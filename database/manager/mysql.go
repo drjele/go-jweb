@@ -1,4 +1,4 @@
-package jwebmanager
+package manager
 
 import (
     `go.mongodb.org/mongo-driver/mongo`
@@ -7,16 +7,16 @@ import (
     `gorm.io/gorm/logger`
     `gorm.io/gorm/schema`
 
-    jwebconnection `gitlab.com/drjele-go/jweb/database/connection`
+    `gitlab.com/drjele-go/jweb/database/connection`
     jweberror `gitlab.com/drjele-go/jweb/error`
-    jwebenvironment `gitlab.com/drjele-go/jweb/kernel/environment`
+    `gitlab.com/drjele-go/jweb/kernel/environment`
 )
 
-func NewMysql(connection *jwebconnection.Connection, env string) Manager {
+func NewMysql(connection *connection.Connection, env string) Manager {
     m := Mysql{connection: connection}
 
     loggerLevel := logger.Info
-    if env == jwebenvironment.EnvProd {
+    if env == environment.EnvProd {
         loggerLevel = logger.Warn
     }
 
@@ -43,11 +43,11 @@ func NewMysql(connection *jwebconnection.Connection, env string) Manager {
 }
 
 type Mysql struct {
-    connection *jwebconnection.Connection
+    connection *connection.Connection
     client     *gorm.DB
 }
 
-func (m *Mysql) GetConnection() *jwebconnection.Connection {
+func (m *Mysql) GetConnection() *connection.Connection {
     return m.connection
 }
 

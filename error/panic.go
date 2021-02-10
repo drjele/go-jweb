@@ -1,4 +1,4 @@
-package jweberror
+package error
 
 import (
     `log`

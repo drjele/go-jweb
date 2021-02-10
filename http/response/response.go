@@ -1,4 +1,4 @@
-package jwebresponse
+package response
 
 const (
     ContentTypeCsv = `text/csv`

@@ -1,4 +1,4 @@
-package jwebparameter
+package parameter
 
 import (
     `github.com/knadh/koanf`

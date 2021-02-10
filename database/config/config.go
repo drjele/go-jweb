@@ -1,23 +1,23 @@
-package jwebconfig
+package config
 
 import (
-    jwebconnection `gitlab.com/drjele-go/jweb/database/connection`
+    `gitlab.com/drjele-go/jweb/database/connection`
     jweberror `gitlab.com/drjele-go/jweb/error`
 )
 
 func New() *Config {
     config := Config{}
 
-    config.connections = jwebconnection.Map{}
+    config.connections = connection.Map{}
 
     return &config
 }
 
 type Config struct {
-    connections jwebconnection.Map
+    connections connection.Map
 }
 
-func (c *Config) AddConnection(name string, connection *jwebconnection.Connection) {
+func (c *Config) AddConnection(name string, connection *connection.Connection) {
     _, ok := c.connections[name]
     if ok == true {
         jweberror.Fatal(jweberror.New(`duplicate database connection name "%v"`, name))
@@ -26,7 +26,7 @@ func (c *Config) AddConnection(name string, connection *jwebconnection.Connectio
     c.connections[name] = connection
 }
 
-func (c *Config) GetConnection(name string) *jwebconnection.Connection {
+func (c *Config) GetConnection(name string) *connection.Connection {
     _, ok := c.connections[name]
     if ok == false {
         jweberror.Fatal(jweberror.New(`duplicate database connection name "%v"`, name))

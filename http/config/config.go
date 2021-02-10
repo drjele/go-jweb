@@ -1,4 +1,4 @@
-package jwebconfig
+package config
 
 func New(host string) *Config {
     return &Config{

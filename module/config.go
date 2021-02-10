@@ -1,18 +1,18 @@
-package jwebmodule
+package module
 
 import (
     `log`
     `strings`
 
-    jwebparameter `gitlab.com/drjele-go/jweb/config/parameter`
+    `gitlab.com/drjele-go/jweb/config/parameter`
     jweberror `gitlab.com/drjele-go/jweb/error`
-    jwebkernel `gitlab.com/drjele-go/jweb/kernel`
-    jwebenvironment `gitlab.com/drjele-go/jweb/kernel/environment`
-    jwebfile `gitlab.com/drjele-go/jweb/utility/file`
+    `gitlab.com/drjele-go/jweb/kernel`
+    `gitlab.com/drjele-go/jweb/kernel/environment`
+    `gitlab.com/drjele-go/jweb/utility/file`
 )
 
-func LoadConfig(module Module, kernel *jwebkernel.Kernel) *jwebparameter.Yaml {
-    var config *jwebparameter.Yaml
+func LoadConfig(module Module, kernel *kernel.Kernel) *parameter.Yaml {
+    var config *parameter.Yaml
 
     if module.ConfigurationRequired() == false {
         return config
@@ -21,20 +21,20 @@ func LoadConfig(module Module, kernel *jwebkernel.Kernel) *jwebparameter.Yaml {
     filePath := kernel.GetRootDir() + `config/` + module.GetName() + `.yaml`
     log.Printf(`loading config "%v"`+"\n", filePath)
 
-    if jwebfile.Exists(filePath) == false {
+    if file.Exists(filePath) == false {
         jweberror.Fatal(
             jweberror.New(`the configuration file %v does not exists`, filePath),
         )
     }
 
-    config = jwebparameter.NewYamlFromFiles([]string{filePath})
+    config = parameter.NewYamlFromFiles([]string{filePath})
 
     config = parseConfig(config, kernel.GetEnvironment())
 
     return config
 }
 
-func parseConfig(config *jwebparameter.Yaml, environment *jwebenvironment.Environment) *jwebparameter.Yaml {
+func parseConfig(config *parameter.Yaml, environment *environment.Environment) *parameter.Yaml {
     m := map[string]interface{}{}
 
     for _, key := range config.Keys() {
@@ -50,10 +50,10 @@ func parseConfig(config *jwebparameter.Yaml, environment *jwebenvironment.Enviro
         m[key] = parseParam(stringParam, environment)
     }
 
-    return jwebparameter.NewYamlFromMap(m)
+    return parameter.NewYamlFromMap(m)
 }
 
-func parseParam(stringParam string, environment *jwebenvironment.Environment) string {
+func parseParam(stringParam string, environment *environment.Environment) string {
     if (strings.HasPrefix(stringParam, `%env(`) && strings.HasSuffix(stringParam, `)%`)) == false {
         return stringParam
     }

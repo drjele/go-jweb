@@ -1,4 +1,4 @@
-package jwebmanager
+package manager
 
 import (
     `context`
@@ -7,11 +7,11 @@ import (
     `go.mongodb.org/mongo-driver/mongo/options`
     `gorm.io/gorm`
 
-    jwebconnection `gitlab.com/drjele-go/jweb/database/connection`
+    `gitlab.com/drjele-go/jweb/database/connection`
     jweberror `gitlab.com/drjele-go/jweb/error`
 )
 
-func NewMongo(connection *jwebconnection.Connection) Manager {
+func NewMongo(connection *connection.Connection) Manager {
     m := Mongo{connection: connection}
 
     client, err := mongo.NewClient(
@@ -33,11 +33,11 @@ func NewMongo(connection *jwebconnection.Connection) Manager {
 }
 
 type Mongo struct {
-    connection *jwebconnection.Connection
+    connection *connection.Connection
     client     *mongo.Client
 }
 
-func (m *Mongo) GetConnection() *jwebconnection.Connection {
+func (m *Mongo) GetConnection() *connection.Connection {
     return m.connection
 }
 

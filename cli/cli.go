@@ -1,4 +1,4 @@
-package jwebcli
+package cli
 
 import (
     `os`
@@ -6,15 +6,15 @@ import (
     `github.com/urfave/cli/v2`
 
     jwebcommand `gitlab.com/drjele-go/jweb/cli/command`
-    jwebconfig `gitlab.com/drjele-go/jweb/cli/config`
+    `gitlab.com/drjele-go/jweb/cli/config`
     jweberror `gitlab.com/drjele-go/jweb/error`
-    jwebflag `gitlab.com/drjele-go/jweb/kernel/flag`
+    `gitlab.com/drjele-go/jweb/kernel/flag`
     jwebslice `gitlab.com/drjele-go/jweb/utility/slice`
 )
 
 type list []*cli.Command
 
-func Run(config *jwebconfig.Config, commandList jwebcommand.List) {
+func Run(config *config.Config, commandList jwebcommand.List) {
     if len(commandList) == 0 {
         jweberror.Fatal(
             jweberror.New(`no commands were set for cli mode`),
@@ -25,7 +25,7 @@ func Run(config *jwebconfig.Config, commandList jwebcommand.List) {
         Name:  config.GetName(),
         Usage: config.GetDescription(),
         Flags: []cli.Flag{
-            &cli.StringFlag{Name: jwebflag.FlagMode, Usage: `this is the primary app flag and should not be used for commands`},
+            &cli.StringFlag{Name: flag.FlagMode, Usage: `this is the primary app flag and should not be used for commands`},
         },
         Commands: buildList(commandList),
     }

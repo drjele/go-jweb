@@ -1,4 +1,4 @@
-package jwebrequest
+package request
 
 import (
     `github.com/gin-gonic/gin`

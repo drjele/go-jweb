@@ -1,4 +1,4 @@
-package jwebhttp
+package http
 
 import (
     `net/http`
@@ -7,10 +7,10 @@ import (
     `golang.org/x/sync/errgroup`
 
     jweberror `gitlab.com/drjele-go/jweb/error`
-    jwebroute `gitlab.com/drjele-go/jweb/http/routing/route`
+    `gitlab.com/drjele-go/jweb/http/routing/route`
     jwebrouter `gitlab.com/drjele-go/jweb/http/routing/router`
-    jwebconfig `gitlab.com/drjele-go/jweb/kernel/config`
-    jwebenvironment `gitlab.com/drjele-go/jweb/kernel/environment`
+    `gitlab.com/drjele-go/jweb/kernel/config`
+    `gitlab.com/drjele-go/jweb/kernel/environment`
 )
 
 var (
@@ -18,9 +18,9 @@ var (
 )
 
 func Run(
-    environment *jwebenvironment.Environment,
-    config *jwebconfig.Config,
-    routeList jwebroute.List,
+    environment *environment.Environment,
+    config *config.Config,
+    routeList route.List,
 ) {
     if len(routeList) == 0 {
         jweberror.Fatal(

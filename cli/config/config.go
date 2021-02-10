@@ -1,4 +1,4 @@
-package jwebconfig
+package config
 
 func New(name string, description string) *Config {
     config := Config{
