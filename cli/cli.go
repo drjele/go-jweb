@@ -9,7 +9,7 @@ import (
     `gitlab.com/drjele-go/jweb/cli/config`
     jweberror `gitlab.com/drjele-go/jweb/error`
     `gitlab.com/drjele-go/jweb/kernel/flag`
-    jwebslice `gitlab.com/drjele-go/jweb/utility/slice`
+    `gitlab.com/drjele-go/jweb/utility`
 )
 
 type list []*cli.Command
@@ -39,7 +39,7 @@ func buildList(commands jwebcommand.List) list {
     var commandNames []string
 
     for _, command := range commands {
-        if jwebslice.StringInSlice(command.GetName(), commandNames) {
+        if utility.StringInSlice(command.GetName(), commandNames) {
             jweberror.Fatal(
                 jweberror.New(`duplicate command name "%v"`, command.GetName()),
             )

@@ -1,4 +1,4 @@
-package jmap
+package utility
 
 import (
     jweberror `gitlab.com/drjele-go/jweb/error`

@@ -5,7 +5,7 @@ import (
 
     `gitlab.com/drjele-go/jweb/config/parameter`
     jweberror `gitlab.com/drjele-go/jweb/error`
-    `gitlab.com/drjele-go/jweb/utility/file`
+    `gitlab.com/drjele-go/jweb/utility`
 )
 
 const (
@@ -66,7 +66,7 @@ func (e *Environment) loadDotEnv(rootDir string) map[string]string {
     files := []string{rootDir + `.env`}
 
     envLocal := rootDir + `.env.local`
-    if file.Exists(envLocal) {
+    if utility.Exists(envLocal) {
         files = append(files, envLocal)
     }
 

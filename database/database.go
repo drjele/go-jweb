@@ -7,8 +7,7 @@ import (
     jwebmanager `gitlab.com/drjele-go/jweb/database/manager`
     jweberror `gitlab.com/drjele-go/jweb/error`
     jwebkernel `gitlab.com/drjele-go/jweb/kernel`
-    `gitlab.com/drjele-go/jweb/utility/convert`
-    jwebmap `gitlab.com/drjele-go/jweb/utility/map`
+    `gitlab.com/drjele-go/jweb/utility`
 )
 
 const (
@@ -77,18 +76,18 @@ func (d *Database) buildConfig(yamlConfig *parameter.Yaml) *jwebconfig.Config {
 
     config := jwebconfig.New()
 
-    connections, err := convert.InterfaceToMap(yamlConfig.GetParam(`connections`))
+    connections, err := utility.InterfaceToMap(yamlConfig.GetParam(`connections`))
     jweberror.Fatal(err)
 
     connectionKeys := []string{`driver`, `hostname`, `port`, `username`, `password`, `database`}
     for connectionName, connectionData := range connections {
-        connectionDataMap, err := convert.InterfaceToMap(connectionData)
+        connectionDataMap, err := utility.InterfaceToMap(connectionData)
         jweberror.Fatal(err)
 
-        err = jwebmap.CheckKeysMatch(connectionKeys, connectionDataMap)
+        err = utility.CheckKeysMatch(connectionKeys, connectionDataMap)
         jweberror.Fatal(err)
 
-        connectionDataMapString, err := convert.MapInterfaceToString(connectionDataMap)
+        connectionDataMapString, err := utility.MapInterfaceToString(connectionDataMap)
         jweberror.Fatal(err)
 
         connection := jwebconnection.New(

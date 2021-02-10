@@ -8,7 +8,7 @@ import (
     jweberror `gitlab.com/drjele-go/jweb/error`
     `gitlab.com/drjele-go/jweb/kernel`
     `gitlab.com/drjele-go/jweb/kernel/environment`
-    `gitlab.com/drjele-go/jweb/utility/file`
+    `gitlab.com/drjele-go/jweb/utility`
 )
 
 func LoadConfig(module Module, kernel *kernel.Kernel) *parameter.Yaml {
@@ -21,7 +21,7 @@ func LoadConfig(module Module, kernel *kernel.Kernel) *parameter.Yaml {
     filePath := kernel.GetRootDir() + `config/` + module.GetName() + `.yaml`
     log.Printf(`loading config "%v"`+"\n", filePath)
 
-    if file.Exists(filePath) == false {
+    if utility.Exists(filePath) == false {
         jweberror.Fatal(
             jweberror.New(`the configuration file %v does not exists`, filePath),
         )

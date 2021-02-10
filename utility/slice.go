@@ -1,4 +1,4 @@
-package slice
+package utility
 
 func StringInSlice(needle string, haystack []string) bool {
     for _, x := range haystack {
