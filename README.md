@@ -1,5 +1,7 @@
 # Jweb
 
+**NO LONGER MAINTAINED, MOVED TO https://gitlab.com/precision-soft-open-source/go/melody**
+
 This is a **Symfony**(https://symfony.com/) inspired framework, written in Go.
 
 It is a work in progress and any contributions are welcomed.
